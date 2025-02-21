@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Snippet</title>
-    <link rel="stylesheet" href="/css/styles.css"> 
+    <link rel="stylesheet" href="/css/style.css"> 
     <link rel="stylesheet" href="/css/create-snippet.css">
 </head>
 <body>
@@ -20,9 +20,9 @@
     <section class="snippet-form-container">
         <h1>Create a New Snippet</h1>
 
-        <% if (error) { %>
-            <p class="error-message"><%= error %></p>
-        <% } %>
+        <% if (error_msg) { %>
+            <p class="error-message"><%= error_msg %></p>
+        <% } %>        
 
         <form action="/snippets/create" method="POST">
             <label for="title">Title:</label>

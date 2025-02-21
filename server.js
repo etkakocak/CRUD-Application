@@ -71,7 +71,7 @@ app.post('/auth/login', async (req, res) => {
 });
 
 app.get('/snippets/create', requireAuth, (req, res) => {
-    res.render('create-snippet');
+    res.render('create-snippet', { error_msg: req.flash('error_msg')[0] || null });
 });
 
 app.post('/snippets/create', requireAuth, async (req, res) => {
