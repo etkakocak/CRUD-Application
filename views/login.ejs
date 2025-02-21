@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="stylesheet" href="/css/auth.css"> 
+</head>
+<body>
+    <nav>
+        <div class="logo">Code Snippets</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/snippets">View Snippets</a></li>
+            <li><a href="/auth/register">Register</a></li>
+        </ul>
+    </nav>
+
+    <section class="auth-container">
+        <h1>Login</h1>
+        
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
+        <form action="/auth/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p>Don't have an account? <a href="/auth/register">Register here</a></p>
+    </section>
+</body>
+</html>

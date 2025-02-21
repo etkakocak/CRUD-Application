@@ -29,6 +29,27 @@ app.get('/snippets', async (req, res) => {
     res.render('snippets', { snippets });
 });
 
+app.get('/auth/login', (req, res) => {
+    res.render('login', { error: null }); 
+});
+
+app.post('/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await User.findOne({ username });
+
+        if (!user || !(await user.matchPassword(password))) {
+            return res.render('login', { error: 'Invalid username or password' });
+        }
+
+        req.session.user = user._id; 
+        res.redirect('/snippets'); 
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+
 app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
