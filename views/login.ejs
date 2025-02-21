@@ -20,12 +20,8 @@
     <section class="auth-container">
         <h1>Login</h1>
 
-        <% if (error_msg) { %>
+        <% if (error_msg && error_msg.length > 0) { %>
             <p class="flash-error"><%= error_msg %></p>
-        <% } %>
-
-        <% if (success_msg) { %>
-            <p class="flash-success"><%= success_msg %></p>
         <% } %>
 
         <form action="/auth/login" method="POST">

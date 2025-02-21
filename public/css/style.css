@@ -84,3 +84,13 @@ nav ul li a:hover {
     text-align: center;
     font-weight: bold;
 }
+
+.flash-success {
+    background-color: #e0ffdd;
+    color: #00d800;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}

@@ -25,8 +25,8 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg')[0] || null;
-    res.locals.error_msg = req.flash('error_msg')[0] || null;
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
     next();
 });
 
@@ -44,7 +44,8 @@ app.get('/', (req, res) => {
 
 app.get('/snippets', async (req, res) => {
     const snippets = await Snippet.find();
-    res.render('snippets', { snippets });
+    const success_msg = res.locals.success_msg.length > 0 ? res.locals.success_msg[0] : null;
+    res.render('snippets', { snippets, success_msg });
 });
 
 app.get('/auth/login', (req, res) => {
@@ -63,7 +64,7 @@ app.post('/auth/login', async (req, res) => {
         }
 
         req.session.user = user._id;
-        req.flash('success_msg', 'Login successful!');
+        req.flash('success_msg', `Login successful! Welcome, ${username}.`);
         res.redirect('/snippets');
     } catch (error) {
         res.status(500).send('Server error');

@@ -17,6 +17,10 @@
         </ul>
     </nav>
 
+    <% if (success_msg) { %>
+        <p class="flash-success"><%= success_msg %></p>
+    <% } %>
+
     <a href="/snippets/create" class="btn">Create New Snippet</a>
 
     <section class="snippet-container">
@@ -33,7 +37,6 @@
                 </div>
             <% }) %>
         <% } %>
-
     </section>
 </body>
 </html>
