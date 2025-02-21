@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "B1 Website Scraper Project",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node server.js",
     "http-server": "npx http-server -p 9001",
     "dev": "vite",
     "build": "vite build",
@@ -25,7 +25,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jsdom": "^26.0.0"
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "jsdom": "^26.0.0",
+    "mongodb": "^6.13.1",
+    "mongoose": "^8.10.1"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
