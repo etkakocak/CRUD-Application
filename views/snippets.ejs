@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippets</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/snippets.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">Code Snippets</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/snippets">View Snippets</a></li>
+            <li><a href="/auth/login">Login</a></li>
+            <li><a href="/auth/register">Register</a></li>
+        </ul>
+    </nav>
+
+    <!-- Snippets List -->
+    <section class="snippet-container">
+        <h1>All Snippets</h1>
+
+        <% if (snippets.length === 0) { %>
+            <p>No snippets available.</p>
+        <% } else { %>
+            <% snippets.forEach(snippet => { %>
+                <div class="snippet">
+                    <h2><%= snippet.title %></h2>
+                    <pre><code><%= snippet.code %></code></pre>
+                    <p>Language: <%= snippet.language %></p>
+                </div>
+            <% }) %>
+        <% } %>
+
+    </section>
+</body>
+</html>

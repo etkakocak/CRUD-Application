@@ -1,0 +1,30 @@
+.snippet-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.snippet {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid #007bff;
+    border-radius: 5px;
+}
+
+.snippet h2 {
+    margin: 0;
+    color: #007bff;
+}
+
+.snippet pre {
+    background-color: #272822;
+    color: #f8f8f2;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
