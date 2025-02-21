@@ -6,7 +6,6 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true }
 });
 
-// Şifreyi hashlemeden kaydet
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
@@ -14,7 +13,6 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
-// Şifre doğrulama fonksiyonu
 UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
