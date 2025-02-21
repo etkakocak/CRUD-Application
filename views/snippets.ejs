@@ -12,16 +12,38 @@
         <div class="logo">Code Snippets</div>
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/auth/login">Login</a></li>
-            <li><a href="/auth/register">Register</a></li>
+            <% if (user) { %>
+                <li><a href="/auth/logout">Logout</a></li>
+            <% } else { %>
+                <li><a href="/auth/login">Login</a></li>
+                <li><a href="/auth/register">Register</a></li>
+            <% } %>
         </ul>
     </nav>
 
-    <% if (success_msg) { %>
+    <% if (success_msg && success_msg.length > 0) { %>
         <p class="flash-success"><%= success_msg %></p>
     <% } %>
 
     <a href="/snippets/create" class="btn">Create New Snippet</a>
+
+    <% if (user) { %>
+        <section class="snippet-container">
+            <h1>Your Snippets</h1>
+
+            <% if (userSnippets.length === 0) { %>
+                <p>You haven't created any snippets yet.</p>
+            <% } else { %>
+                <% userSnippets.forEach(snippet => { %>
+                    <div class="snippet">
+                        <h2><%= snippet.title %></h2>
+                        <pre><code><%= snippet.code %></code></pre>
+                        <p>Language: <%= snippet.language %></p>
+                    </div>
+                <% }) %>
+            <% } %>
+        </section>
+    <% } %>
 
     <section class="snippet-container">
         <h1>All Snippets</h1>

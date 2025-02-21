@@ -27,6 +27,7 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
+    res.locals.user = req.session.user || null;
     next();
 });
 
@@ -44,8 +45,10 @@ app.get('/', (req, res) => {
 
 app.get('/snippets', async (req, res) => {
     const snippets = await Snippet.find();
-    const success_msg = res.locals.success_msg.length > 0 ? res.locals.success_msg[0] : null;
-    res.render('snippets', { snippets, success_msg });
+    const userSnippets = req.session.user 
+        ? await Snippet.find({ user: req.session.user.id }) 
+        : [];
+    res.render('snippets', { snippets, userSnippets });
 });
 
 app.get('/auth/login', (req, res) => {
@@ -63,8 +66,8 @@ app.post('/auth/login', async (req, res) => {
             return res.redirect('/auth/login');
         }
 
-        req.session.user = user._id;
-        req.flash('success_msg', `Login successful! Welcome, ${username}.`);
+        req.session.user = { id: user._id.toString(), username: user.username };
+        req.flash('success_msg', `Login successful! Welcome, ${user.username}.`);
         res.redirect('/snippets');
     } catch (error) {
         res.status(500).send('Server error');
@@ -88,7 +91,7 @@ app.post('/snippets/create', requireAuth, async (req, res) => {
             title,
             code,
             language,
-            user: req.session.user 
+            user: req.session.user.id // 🔥 Hata düzeltildi! Artık ObjectId olarak kaydediliyor.
         });
 
         await newSnippet.save();
