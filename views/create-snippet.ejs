@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Snippet</title>
+    <link rel="stylesheet" href="/css/styles.css"> 
+    <link rel="stylesheet" href="/css/create-snippet.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">Code Snippets</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/snippets">View Snippets</a></li>
+            <li><a href="/auth/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <section class="snippet-form-container">
+        <h1>Create a New Snippet</h1>
+
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
+        <form action="/snippets/create" method="POST">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="language">Programming Language:</label>
+            <input type="text" id="language" name="language" required>
+
+            <label for="code">Code:</label>
+            <textarea id="code" name="code" rows="6" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</body>
+</html>
