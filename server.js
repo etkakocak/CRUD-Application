@@ -3,6 +3,7 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './src/route/authRoutes.js';
+import snippetRoutes from './src/route/snippetRoutes.js';
 
 dotenv.config(); 
 
@@ -19,6 +20,7 @@ app.use(session({
 connectDB();
 
 app.use('/auth', authRoutes);
+app.use('/snippets', snippetRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
