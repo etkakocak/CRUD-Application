@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './src/route/authRoutes.js';
 import Snippet from './src/model/snippet.js';
-import User from './src/model/user.js'; 
+import User from './src/model/user.js';
+import flash from 'connect-flash';
 
 dotenv.config();
 connectDB();
@@ -21,9 +22,18 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg')[0] || null;
+    res.locals.error_msg = req.flash('error_msg')[0] || null;
+    next();
+});
+
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
-        return res.redirect('/auth/login'); 
+        req.flash('error_msg', 'You must log in to create a snippet!');
+        return res.redirect('/auth/login');
     }
     next();
 };
@@ -38,7 +48,7 @@ app.get('/snippets', async (req, res) => {
 });
 
 app.get('/auth/login', (req, res) => {
-    res.render('login', { error: null });
+    res.render('login');
 });
 
 app.post('/auth/login', async (req, res) => {
@@ -48,10 +58,12 @@ app.post('/auth/login', async (req, res) => {
         const user = await User.findOne({ username });
 
         if (!user || !(await user.matchPassword(password))) {
-            return res.render('login', { error: 'Invalid username or password' });
+            req.flash('error_msg', 'Invalid username or password');
+            return res.redirect('/auth/login');
         }
 
         req.session.user = user._id;
+        req.flash('success_msg', 'Login successful!');
         res.redirect('/snippets');
     } catch (error) {
         res.status(500).send('Server error');
@@ -59,14 +71,15 @@ app.post('/auth/login', async (req, res) => {
 });
 
 app.get('/snippets/create', requireAuth, (req, res) => {
-    res.render('create-snippet', { error: null });
+    res.render('create-snippet');
 });
 
 app.post('/snippets/create', requireAuth, async (req, res) => {
     const { title, code, language } = req.body;
 
     if (!title || !code || !language) {
-        return res.render('create-snippet', { error: 'All fields are required' });
+        req.flash('error_msg', 'All fields are required');
+        return res.redirect('/snippets/create');
     }
 
     try {
@@ -78,6 +91,7 @@ app.post('/snippets/create', requireAuth, async (req, res) => {
         });
 
         await newSnippet.save();
+        req.flash('success_msg', 'Snippet created successfully!');
         res.redirect('/snippets');
     } catch (error) {
         res.status(500).send('Server error');
