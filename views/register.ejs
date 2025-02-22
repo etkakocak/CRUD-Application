@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="stylesheet" href="/css/auth.css"> 
+</head>
+<body>
+    <nav>
+        <div class="logo">Code Snippets</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/snippets">View Snippets</a></li>
+            <li><a href="/auth/login">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="auth-container">
+        <h1>Register</h1>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            <p class="flash-error"><%= error_msg %></p>
+        <% } %>
+
+        <form action="/auth/register" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>Already have an account? <a href="/auth/login">Login here</a></p>
+    </section>
+</body>
+</html>

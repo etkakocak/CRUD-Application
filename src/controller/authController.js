@@ -7,18 +7,23 @@ export const registerUser = async (req, res) => {
         const userExists = await User.findOne({ username });
 
         if (userExists) {
-            return res.status(400).json({ message: 'Username already exists' });
+            req.flash('error_msg', 'Username already exists.');
+            return res.redirect('/auth/register');
         }
 
         const user = await User.create({ username, password });
 
         if (user) {
-            res.status(201).json({ message: 'User registered successfully' });
+            req.session.user = { id: user._id.toString(), username: user.username };
+            req.flash('success_msg', 'Registration successful! You are now logged in.');
+            res.redirect('/snippets');
         } else {
-            res.status(400).json({ message: 'Invalid user data' });
+            req.flash('error_msg', 'Invalid user data');
+            res.redirect('/auth/register');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        req.flash('error_msg', 'Server error');
+        res.redirect('/auth/register');
     }
 };
 
@@ -28,18 +33,22 @@ export const loginUser = async (req, res) => {
     try {
         const user = await User.findOne({ username });
 
-        if (user && (await user.matchPassword(password))) {
-            req.session.user = user._id;
-            res.json({ message: 'Login successful' });
-        } else {
-            res.status(401).json({ message: 'Invalid username or password' });
+        if (!user || !(await user.matchPassword(password))) {
+            req.flash('error_msg', 'Invalid username or password');
+            return res.redirect('/auth/login');
         }
+
+        req.session.user = { id: user._id.toString(), username: user.username };
+        req.flash('success_msg', `Login successful! Welcome, ${user.username}.`);
+        res.redirect('/snippets');
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        req.flash('error_msg', 'Server error');
+        res.redirect('/auth/login');
     }
 };
 
 export const logoutUser = (req, res) => {
-    req.session.destroy();
-    res.json({ message: 'Logged out successfully' });
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
 };

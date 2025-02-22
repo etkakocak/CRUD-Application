@@ -74,6 +74,37 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
+app.get('/auth/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/auth/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const userExists = await User.findOne({ username });
+
+        if (userExists) {
+            req.flash('error_msg', 'Username already exists.');
+            return res.redirect('/auth/register');
+        }
+
+        const user = await User.create({ username, password });
+
+        if (user) {
+            req.session.user = { id: user._id.toString(), username: user.username };
+            req.flash('success_msg', 'Registration successful! You are now logged in.');
+            res.redirect('/snippets');
+        } else {
+            req.flash('error_msg', 'Invalid user data');
+            res.redirect('/auth/register');
+        }
+    } catch (error) {
+        req.flash('error_msg', 'Server error');
+        res.redirect('/auth/register');
+    }
+});
+
 app.get('/snippets/create', requireAuth, (req, res) => {
     res.render('create-snippet', { error_msg: req.flash('error_msg')[0] || null });
 });
@@ -91,7 +122,7 @@ app.post('/snippets/create', requireAuth, async (req, res) => {
             title,
             code,
             language,
-            user: req.session.user.id // 🔥 Hata düzeltildi! Artık ObjectId olarak kaydediliyor.
+            user: req.session.user.id
         });
 
         await newSnippet.save();
