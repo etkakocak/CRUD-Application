@@ -1,7 +1,7 @@
 {
-  "name": "b1-website",
+  "name": "b2-website",
   "version": "1.0.0",
-  "description": "B1 Website Scraper Project",
+  "description": "B2 Website CRUD Project",
   "type": "module",
   "main": "server.js",
   "scripts": {
