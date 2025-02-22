@@ -33,7 +33,10 @@ app.use((req, res, next) => {
 
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
-        req.flash('error_msg', 'You must log in to create or edit a snippet!');
+        if (req.path.startsWith('/snippets/edit') || req.path.startsWith('/snippets/delete')) {
+            return res.status(403).render('error', { status: 403, error_msg: "Forbidden. You do not have permission to access this page." });
+        }
+        req.flash('error_msg', 'You must log in to create a snippet!');
         return res.redirect('/auth/login');
     }
     next();
@@ -201,9 +204,17 @@ app.post('/snippets/delete/:id', requireAuth, async (req, res) => {
 });
 
 app.get('/auth/logout', (req, res) => {
+    if (!req.session.user) {
+        return res.status(500).render('error', { status: 500, error_msg: "Internal Server Error." });
+    }
+
     req.session.destroy(() => {
         res.redirect('/');
     });
+});
+
+app.use((_, res) => { 
+    res.status(404).render('error', { status: 404, error_msg: "Not Found. The page you are looking for does not exist." });
 });
 
 app.use('/auth', authRoutes);
