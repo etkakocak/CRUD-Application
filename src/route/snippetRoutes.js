@@ -1,12 +1,39 @@
 import express from 'express';
-import { createSnippet, getAllSnippets, getUserSnippets, updateSnippet, deleteSnippet } from '../controller/snippetController.js';
+import { 
+    createSnippet, 
+    getAllSnippets, 
+    getUserSnippets, 
+    getSnippetById, 
+    updateSnippet, 
+    deleteSnippet 
+} from '../controller/snippetController.js';
 
 const router = express.Router();
 
-router.post('/', createSnippet);
+const requireAuth = (req, res, next) => {
+    if (!req.session.user) {
+        req.flash('error_msg', 'You must be logged in to perform this action.');
+        return res.redirect('/auth/login');
+    }
+    next();
+};
+
+// Get all snippets (Public)
 router.get('/', getAllSnippets);
-router.get('/mine', getUserSnippets);
-router.put('/:id', updateSnippet);
-router.delete('/:id', deleteSnippet);
+
+// Get snippets of logged-in user (Private)
+router.get('/mine', requireAuth, getUserSnippets);
+
+// Get single snippet by ID for editing (Private)
+router.get('/edit/:id', requireAuth, getSnippetById);
+
+// Create a new snippet (Private)
+router.post('/', requireAuth, createSnippet);
+
+// Update a snippet (Private)
+router.post('/edit/:id', requireAuth, updateSnippet);
+
+// Delete a snippet (Private)
+router.post('/delete/:id', requireAuth, deleteSnippet);
 
 export default router;

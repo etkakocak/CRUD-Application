@@ -4,7 +4,8 @@ export const createSnippet = async (req, res) => {
     const { title, code, language } = req.body;
 
     if (!req.session.user) {
-        return res.status(403).json({ message: "Unauthorized! Please log in." });
+        req.flash('error_msg', 'Unauthorized! Please log in.');
+        return res.redirect('/auth/login');
     }
 
     try {
@@ -12,12 +13,14 @@ export const createSnippet = async (req, res) => {
             title,
             code,
             language,
-            user: req.session.user
+            user: req.session.user.id
         });
 
-        res.status(201).json({ message: "Snippet created successfully!", snippet: newSnippet });
+        req.flash('success_msg', 'Snippet created successfully!');
+        res.redirect('/snippets');
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        req.flash('error_msg', 'Server error');
+        res.redirect('/snippets/create');
     }
 };
 
@@ -32,14 +35,32 @@ export const getAllSnippets = async (req, res) => {
 
 export const getUserSnippets = async (req, res) => {
     if (!req.session.user) {
-        return res.status(403).json({ message: "Unauthorized! Please log in." });
+        req.flash('error_msg', 'Unauthorized! Please log in.');
+        return res.redirect('/auth/login');
     }
 
     try {
-        const snippets = await Snippet.find({ user: req.session.user });
+        const snippets = await Snippet.find({ user: req.session.user.id });
         res.json(snippets);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+export const getSnippetById = async (req, res) => {
+    try {
+        const snippet = await Snippet.findById(req.params.id);
+        if (!snippet) {
+            return res.status(404).send("Snippet not found");
+        }
+
+        if (snippet.user.toString() !== req.session.user.id) {
+            return res.status(403).send("You are not authorized to edit this snippet");
+        }
+
+        res.render('edit-snippet', { snippet });
+    } catch (error) {
+        res.status(500).send("Server error");
     }
 };
 
@@ -48,17 +69,20 @@ export const updateSnippet = async (req, res) => {
     const { title, code, language } = req.body;
 
     if (!req.session.user) {
-        return res.status(403).json({ message: "Unauthorized! Please log in." });
+        req.flash('error_msg', 'Unauthorized! Please log in.');
+        return res.redirect('/auth/login');
     }
 
     try {
         const snippet = await Snippet.findById(id);
         if (!snippet) {
-            return res.status(404).json({ message: "Snippet not found" });
+            req.flash('error_msg', 'Snippet not found');
+            return res.redirect('/snippets');
         }
 
-        if (snippet.user.toString() !== req.session.user) {
-            return res.status(403).json({ message: "You can only update your own snippets" });
+        if (snippet.user.toString() !== req.session.user.id) {
+            req.flash('error_msg', 'You can only update your own snippets');
+            return res.redirect('/snippets');
         }
 
         snippet.title = title || snippet.title;
@@ -66,9 +90,11 @@ export const updateSnippet = async (req, res) => {
         snippet.language = language || snippet.language;
         await snippet.save();
 
-        res.json({ message: "Snippet updated successfully!", snippet });
+        req.flash('success_msg', 'Snippet updated successfully!');
+        res.redirect('/snippets');
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        req.flash('error_msg', 'Server error');
+        res.redirect('/snippets');
     }
 };
 
@@ -76,22 +102,27 @@ export const deleteSnippet = async (req, res) => {
     const { id } = req.params;
 
     if (!req.session.user) {
-        return res.status(403).json({ message: "Unauthorized! Please log in." });
+        req.flash('error_msg', 'Unauthorized! Please log in.');
+        return res.redirect('/auth/login');
     }
 
     try {
         const snippet = await Snippet.findById(id);
         if (!snippet) {
-            return res.status(404).json({ message: "Snippet not found" });
+            req.flash('error_msg', 'Snippet not found');
+            return res.redirect('/snippets');
         }
 
-        if (snippet.user.toString() !== req.session.user) {
-            return res.status(403).json({ message: "You can only delete your own snippets" });
+        if (snippet.user.toString() !== req.session.user.id) {
+            req.flash('error_msg', 'You can only delete your own snippets');
+            return res.redirect('/snippets');
         }
 
         await Snippet.findByIdAndDelete(id);
-        res.json({ message: "Snippet deleted successfully!" });
+        req.flash('success_msg', 'Snippet deleted successfully!');
+        res.redirect('/snippets');
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        req.flash('error_msg', 'Server error');
+        res.redirect('/snippets');
     }
 };

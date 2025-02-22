@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
-        req.flash('error_msg', 'You must log in to create a snippet!');
+        req.flash('error_msg', 'You must log in to create or edit a snippet!');
         return res.redirect('/auth/login');
     }
     next();
@@ -130,6 +130,73 @@ app.post('/snippets/create', requireAuth, async (req, res) => {
         res.redirect('/snippets');
     } catch (error) {
         res.status(500).send('Server error');
+    }
+});
+
+app.get('/snippets/edit/:id', requireAuth, async (req, res) => {
+    try {
+        const snippet = await Snippet.findById(req.params.id);
+
+        if (!snippet) {
+            return res.status(404).send('Snippet not found');
+        }
+
+        if (snippet.user.toString() !== req.session.user.id) {
+            return res.status(403).send('You are not authorized to edit this snippet');
+        }
+
+        res.render('edit-snippet', { snippet });
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/snippets/edit/:id', requireAuth, async (req, res) => {
+    const { title, code, language } = req.body;
+
+    try {
+        const snippet = await Snippet.findById(req.params.id);
+
+        if (!snippet) {
+            return res.status(404).send('Snippet not found');
+        }
+
+        if (snippet.user.toString() !== req.session.user.id) {
+            return res.status(403).send('You are not authorized to edit this snippet');
+        }
+
+        snippet.title = title;
+        snippet.code = code;
+        snippet.language = language;
+        await snippet.save();
+
+        req.flash('success_msg', 'Snippet updated successfully!');
+        res.redirect('/snippets');
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/snippets/delete/:id', requireAuth, async (req, res) => {
+    try {
+        const snippet = await Snippet.findById(req.params.id);
+
+        if (!snippet) {
+            req.flash('error_msg', 'Snippet not found');
+            return res.redirect('/snippets');
+        }
+
+        if (snippet.user.toString() !== req.session.user.id) {
+            req.flash('error_msg', 'You are not authorized to delete this snippet');
+            return res.redirect('/snippets');
+        }
+
+        await Snippet.findByIdAndDelete(req.params.id);
+        req.flash('success_msg', 'Snippet deleted successfully!');
+        res.redirect('/snippets');
+    } catch (error) {
+        req.flash('error_msg', 'Server error');
+        res.redirect('/snippets');
     }
 });
 
