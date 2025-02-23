@@ -1,7 +1,7 @@
 # B2 CRUD
 
 ### Description
-This assignment
+This assignment is a web application built with Node.js, Express, and MongoDB that allows users to create, view, edit, and delete code snippets. Anonymous users can browse all public snippets, while authenticated users can manage their own snippets securely. The application includes user authentication, session-based authorization, and flash messages for user feedback. It also implements proper HTTP status codes and security measures to protect against unauthorized access. Built with EJS templates, the interface is simple and user-friendly.  
 
 ### Instructions to download and run:
 1. Clone the repo to any location on your computer with the command below (or with SSH if you have the access):  
