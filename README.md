@@ -9,11 +9,13 @@ This assignment
     git clone https://gitlab.lnu.se/1dv528/student/ek223zf/b2-crud
     ```    
 
-2. From the same terminal, enter the repo with the command **cd b2-crud** and then type the command below to run it:  
+2. Edit the ``".env"`` file to connect the application to the database. You can connect to my MongoDB Atlas database or other MongoDB databases by editing that file.  
+
+3. From the same terminal, enter the repo with the command **cd b2-crud** and then type the command below to run it:  
     ```
     npm start
     ```
-3. Th
+4. Te
 
 ### Linters
 * Run the linters by the command **npm run lint** to verify that the codes contain no errors.  
