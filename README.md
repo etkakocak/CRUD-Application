@@ -15,7 +15,7 @@ This assignment
     ```
     npm start
     ```
-4. Te
+4. The website of the application can be accessed by clicking on the link that will appear in the terminal.
 
 ### Linters
 * Run the linters by the command **npm run lint** to verify that the codes contain no errors.  
