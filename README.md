@@ -1,24 +1,25 @@
-# B2 CRUD
+# CRUD Application
 
 ### Description
-This assignment is a web application built with Node.js, Express, and MongoDB that allows users to create, view, edit, and delete code snippets. Anonymous users can browse all public snippets, while authenticated users can manage their own snippets securely. The application includes user authentication, session-based authorization, and flash messages for user feedback. It also implements proper HTTP status codes and security measures to protect against unauthorized access. Built with EJS templates, the interface is simple and user-friendly.  
+This is a web application built with Node.js, Express, and MongoDB that allows users to create, view, edit, and delete code snippets. Anonymous users can browse all public snippets, while authenticated users can manage their own snippets securely. The application includes user authentication, session-based authorization, and flash messages for user feedback. It also implements proper HTTP status codes and security measures to protect against unauthorized access. Built with EJS templates, the interface is simple and user-friendly.  
 
 ### Instructions to download and run:
-1. Clone the repo to any location on your computer with the command below (or with SSH if you have the access):  
+1. Clone the repo to any location on your computer.
+
+2. Create a ``".env"`` file to connect the application to a MongoDB Atlas database:
     ```
-    git clone https://gitlab.lnu.se/1dv528/student/ek223zf/b2-crud
-    ```    
+    MONGO_URI='mongodb_atlas_project_URI'
+    SESSION_SECRET='session_key'
+    ```
 
-2. Edit the ``".env"`` file to connect the application to the database. You can connect to my MongoDB Atlas database or other MongoDB databases by editing that file.  
-
-3. From the same terminal, enter the repo with the command **cd b2-crud** and then type the command below to run it:  
+3. Type the command below to run it:  
     ```
     npm start
     ```
+
 4. The website of the application can be accessed by clicking on the link that will appear in the terminal.
 
 ### Linters
 * Run the linters by the command **npm run lint** to verify that the codes contain no errors.  
 
 The application follows modern coding standards with ESLint compliance.  
-I already ran the command and fixed all errors and warnings. But if you make some updates, run the command to see if any errors or warnings come up.
